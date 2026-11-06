@@ -5,42 +5,41 @@
 #                                                     +:+ +:+         +:+      #
 #    By: mgencogl <mgencogl@student.42lausanne.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/10/22 11:39:55 by mgencogl          #+#    #+#              #
-#    Updated: 2026/10/30 16:52:02 by mgencogl         ###   ########.fr        #
+#    Created: 2026/10/08 14:04:24 by aude-la           #+#    #+#              #
+#    Updated: 2026/11/06 16:50:35 by mgencogl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
+NAME        = push_swap
 
-NAME = libftprintf.a
+CC          = cc
+CFLAGS      = -Wall -Wextra -Werror
 
-HEADER = ft_printf.h
-SRCS_FILES = ft_printf.c convcheck.c itoabase.c printdecimals.c printfstring.c \
-			printhexadecimals.c printvoidpointer.c
-OBJECTS = $(SRCS_FILES:.c=.o)
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
+PRINTF_DIR  = ft_printf
+PRINTF      = $(PRINTF_DIR)/libftprintf.a
 
+SRCS        = main.c input_parser.c #more c files as populated
+OBJS        = $(SRCS:.c=.o)
 
-all: $(LIBFT) $(NAME)
+HEADERS     = push_swap_lib.h
 
-%.o: %.c $(HEADER)
+all: $(NAME)
+
+%.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJECTS) $(LIBFT)
-	cp $(LIBFT) $(NAME)
-	ar rcs $(NAME) $(OBJECTS)
+$(NAME): $(PRINTF) $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(PRINTF) -o $(NAME)
 
-$(LIBFT): 
-	$(MAKE) -C $(LIBFT_DIR) all
+$(PRINTF):
+	$(MAKE) -C $(PRINTF_DIR) all
 
 clean:
-	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -f $(OBJECTS)
+	$(MAKE) -C $(PRINTF_DIR) clean
+	rm -f $(OBJS)
 
 fclean: clean
-	$(MAKE) -C $(LIBFT_DIR) fclean
+	$(MAKE) -C $(PRINTF_DIR) fclean
 	rm -f $(NAME)
 
 re: fclean all
