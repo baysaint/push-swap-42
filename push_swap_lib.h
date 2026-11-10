@@ -6,7 +6,7 @@
 /*   By: mgencogl <mgencogl@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 12:27:18 by aude-la           #+#    #+#             */
-/*   Updated: 2026/11/06 16:34:23 by mgencogl         ###   ########.fr       */
+/*   Updated: 2026/11/10 16:16:06 by mgencogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef	struct s_mode_recorder
 	int	bench_exists;
 	int	strategy;
 	int error_exists;
+	int lenstacka;
 	float disorder;
 }	t_rec;
 
