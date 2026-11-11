@@ -12,7 +12,16 @@
 
 #include "push_swap_lib.h"
 
-void	has_illegal_char(char **argv, int argc, t_rec *specs)
+/*void	check_flag_record(char **argv, int argc, t_rec *specs)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	
+}
+
+int	has_illegal_char(char **argv, int argc, t_rec *specs)
 {
 	int		i;
 	int		j;
@@ -20,31 +29,82 @@ void	has_illegal_char(char **argv, int argc, t_rec *specs)
 	char	*str;
 
 	i = 1;
-	j = 0;
 	str = " +-\t\n\v\f\rsimpleducoxatvbnh0123456789";
 	while (i < argc)
 	{
-		while(argv[i][j] && specs->error_exists == 0)
+		j = 0;
+		while(argv[i][j])
 		{
 			c = argv[i][j];
 			if (!ft_strchr(str, c))
 			{
-				specs->error_exists = 1;
+				return (1);
 				break;
 			}
 			j++;
 		}
 		i++;
 	}
+	return (0);
+}*/
+
+int	parse_flag(char *tok, t_rec *specs);
+
+int parse_number(char *tok, int number, t_list **a);
+
+int append_note(t_list **a, int number);
+
+int	token_processor(char *tok, t_rec *specs, t_list **a)
+{
+	int	number;
+
+	if(tok[0] == '-' && tok[1] == '-')
+		return(parse_flag(tok, specs));
+	if(!parse_number(tok, &number, a))
+		return(0);
+	return(append_note(a, number));
+}
+
+int	arg_processor(char *arg, t_rec *specs, t_list **a)
+{
+	char **tokens;
+	int i;
+
+	i = 0;
+	tokens = ft_split_ps(arg);
+	if(!tokens || !tokens[0])
+	{
+		ft_free_result(tokens);
+		return (0);
+	}
+	while(tokens[i])
+	{
+		if(!token_processor(tokens[i], specs, a))
+		{
+			ft_free_result(tokens);
+			return (0);
+		}
+		i++;
+	}
+	ft_free_result(tokens);
+	return (1);
 }
 
 void	input_parser(char **argv, int argc, t_rec *specs, t_list **a)
 {
 	int i;
-	
-	i = 1;
-	has_illegal_char(argv, argc, specs);
-	
-	
-	
+
+	i = 0;
+	while(i<argc)
+	{
+		if(!arg_processor(argv[i], specs, a))
+		{
+			specs->error_exists = 1;
+			return ;
+		}
+		i++;
+	}
+	if(specs->strategy == 0)
+		specs.strategy = 1;
 }
+

@@ -34,7 +34,7 @@ typedef	struct s_mode_recorder
 	int	bench_exists;
 	int	strategy;
 	int error_exists;
-	int lenstacka;
+	int token_len;
 	float disorder;
 }	t_rec;
 
