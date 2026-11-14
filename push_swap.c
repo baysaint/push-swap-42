@@ -12,27 +12,48 @@
 
 #include "push_swap_lib.h"
 
-void	input_parser(char **argv, int argc, t_rec *specs, t_list **a);
-
-void	print_benchtab(t_rec specs);
-
 void	del(void *content)
 {
 	free(content);
 }
 
-void	dispatch_strategy(t_list **a, t_list **b, int strategy)
+void	dispatch_strategy(t_list **a, t_list **b, t_rec *specs)
 {
-	if (strategy == 0)
-		sort_adaptive(a, b);
-	else if (strategy == 1)
-		sort_simple(a, b);
-	else if (strategy == 2)
-		sort_medium(a, b);
-	else if (strategy == 3)
-		sort_complex(a, b);
+	if (specs.strategy == 1)
+		sort_adaptive(a, b, specs);
+	else if (specs.strategy == 2)
+		sort_simple(a, b, specs);
+	else if (specs.strategy == 3)
+		sort_medium(a, b, specs);
+	else if (specs.strategy == 4)
+		sort_complex(a, b, specs);
 }
 
+float	compute_disorder(t_list *a, int listlen)
+{
+	t_list *curr;
+	t_list *next;
+	float	mistakes;
+	float	total_pairs;
+
+	mistakes = 0;
+	total_pairs = (listlen * (listlen - 1) / 2);
+	curr = a;
+	if(!a || listlen < 2)
+		return (0);
+	while (curr)
+	{
+		next = curr.next;
+		while (next)
+			{
+				if (*(int *)(curr.content) > *(int *)(next.content))
+					mistakes++;
+				next = next.next;
+			}
+		curr = curr.next;
+	}
+	return (mistakes / total_pairs);
+}
 
 int	main(int argc, char **argv)
 {
@@ -48,11 +69,13 @@ int	main(int argc, char **argv)
 	input_parser(argv, argc, &specs, &a);
 	if (specs.error_exists)
 	{
-		write(2, "Error\n", 6);
+		write(2, "Error\n", 6); //write.specs.error_message?
 		ft_lstclear(&a, del);
 		return (1);
 	}
-	dispatch_strategy(&a, &b, specs.strategy);
+	specs.disorder = compute_disorder(a, specs.token_len);
+	if(specs.token_len > 1 && specs.disorder > 0)
+		dispatch_strategy(&a, &b, &specs);
 	if (specs.bench_exists)
 		print_benchtab(specs);
 	ft_lstclear(&a, del);

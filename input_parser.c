@@ -48,45 +48,31 @@ int	has_illegal_char(char **argv, int argc, t_rec *specs)
 	return (0);
 }*/
 
-int	parse_flag(char *tok, t_rec *specs);
 
-int parse_number(char *tok, int number, t_list **a);
 
-int append_note(t_list **a, int number);
-
-int	token_processor(char *tok, t_rec *specs, t_list **a)
+int	parse_flag(char *tok, t_rec *specs)
 {
-	int	number;
+	int	flag;
 
-	if(tok[0] == '-' && tok[1] == '-')
-		return(parse_flag(tok, specs));
-	if(!parse_number(tok, &number, a))
-		return(0);
-	return(append_note(a, number));
-}
-
-int	arg_processor(char *arg, t_rec *specs, t_list **a)
-{
-	char **tokens;
-	int i;
-
-	i = 0;
-	tokens = ft_split_ps(arg);
-	if(!tokens || !tokens[0])
+	flag = 0;
+	if (ft_strncmp(tok, "--bench", 8) == 0)
 	{
-		ft_free_result(tokens);
-		return (0);
-	}
-	while(tokens[i])
-	{
-		if(!token_processor(tokens[i], specs, a))
-		{
-			ft_free_result(tokens);
+		if (specs->bench_exists)
 			return (0);
-		}
-		i++;
+		specs->bench_exists = 1;
+		return (1);
 	}
-	ft_free_result(tokens);
+	if (ft_strncmp(tok, "--adaptive", 11) == 0)
+		flag = 1;
+	else if (ft_strncmp(tok, "--simple", 9) == 0)
+		flag = 2;
+	else if (ft_strncmp(tok, "--medium", 9) == 0)
+		flag = 3;
+	else if (ft_strncmp(tok, "--complex", 10) == 0)
+		flag = 4;
+	if (flag == 0 || specs->strategy != 0)
+		return (0);
+	specs->strategy = flag;
 	return (1);
 }
 
@@ -94,8 +80,8 @@ void	input_parser(char **argv, int argc, t_rec *specs, t_list **a)
 {
 	int i;
 
-	i = 0;
-	while(i<argc)
+	i = 1;
+	while(i < argc)
 	{
 		if(!arg_processor(argv[i], specs, a))
 		{
@@ -103,6 +89,11 @@ void	input_parser(char **argv, int argc, t_rec *specs, t_list **a)
 			return ;
 		}
 		i++;
+	}
+	if (specs->token_len == 0)
+	{
+		specs->error_exists = 1;
+		return ;
 	}
 	if(specs->strategy == 0)
 		specs.strategy = 1;

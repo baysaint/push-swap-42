@@ -28,9 +28,11 @@ typedef struct s_list
 
 typedef	struct s_mode_recorder
 /*benchexists is boolean, 0 false, 1 true*/
-/*strategy is default(or adaptive) = 0, others 1,2,3*/
+/*strategy is default(or adaptive) = 1 
+others with ascending complexity 2,3,4*/
 /*error_exists is boolean*/
 {
+	char *error_message;
 	int	bench_exists;
 	int	strategy;
 	int error_exists;
